@@ -19,3 +19,13 @@ spring:
           timeout: 5000
           starttls:
             enable: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_ID}
+            client-secret: ${GOOGLE_PWD}
+            scope:
+              - profile
+              - email
