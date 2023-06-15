@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -43,7 +44,8 @@ public class Account {
     private short coin = 5;
 
     @ManyToMany
-    private Set<Tag> tags;
+    @Builder.Default
+    private Set<Tag> tags = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {
