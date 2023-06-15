@@ -1,0 +1,21 @@
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:h2:tcp:localhost/~/campfire;MODE=MySQL;DB_CLOSE_DELAY=-1
+    username: sa
+    password: 1234
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL}
+    password: ${PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
