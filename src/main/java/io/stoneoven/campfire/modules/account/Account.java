@@ -20,6 +20,10 @@ public class Account {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, updatable = false)
+    private RegisterType registerType;
+
     @Builder.Default
     @Column(nullable = false)
     private boolean emailVerify = false;
