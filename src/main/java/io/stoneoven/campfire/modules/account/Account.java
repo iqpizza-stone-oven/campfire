@@ -1,11 +1,13 @@
 package io.stoneoven.campfire.modules.account;
 
+import io.stoneoven.campfire.modules.tag.Tag;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -35,6 +37,9 @@ public class Account {
     @Builder.Default
     @Column(nullable = false)
     private short coin = 5;
+
+    @ManyToMany
+    private Set<Tag> tags;
 
     @Override
     public boolean equals(Object o) {
