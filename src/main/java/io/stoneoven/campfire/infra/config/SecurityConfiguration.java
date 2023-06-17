@@ -41,6 +41,7 @@ public class SecurityConfiguration {
     public WebSecurityCustomizer configure() {
         return web -> web.ignoring()
                 .requestMatchers("/node_modules/**")
+                .requestMatchers("/favicon.ico", "/resources/**", "/error")
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 }
