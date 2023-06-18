@@ -11,6 +11,7 @@
   "dependencies": {
     "@yaireo/tagify": "^3.5.1",
     "bootstrap": "^4.4.1",
+    "codemirror": "~5.65.13",
     "cropper": "^4.1.0",
     "font-awesome": "^4.7.0",
     "jdenticon": "^2.2.0",
