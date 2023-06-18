@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 
-import java.util.List;
-
 @Data
 @ToString
 public class ReviewForm {
