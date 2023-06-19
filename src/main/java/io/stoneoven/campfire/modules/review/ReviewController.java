@@ -80,17 +80,13 @@ public class ReviewController {
 
     @GetMapping("/review/{review-id}/leave")
     public String deleteReview(@CurrentAccount Account account,
-                               @PathVariable("review-id") long id,
-                               Model model) {
+                               @PathVariable("review-id") long id) {
         final Review review = reviewService.findReviewById(id);
         if (!review.isAuthor(account)) {
-            model.addAttribute(account);
-            model.addAttribute(review);
-            return "redirect:/review/view";
+            return "redirect:/";
         }
 
         reviewService.deleteReview(review);
-        model.addAttribute(account);
         return "redirect:/";
     }
 }
