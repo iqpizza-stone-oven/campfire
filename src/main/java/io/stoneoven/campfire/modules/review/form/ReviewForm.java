@@ -11,7 +11,7 @@ import org.hibernate.validator.constraints.Length;
 public class ReviewForm {
 
     @NotBlank
-    @Length(max = 50)
+    @Length(max = 255)
     private String title;
 
     @NotBlank
