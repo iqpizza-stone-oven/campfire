@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head">
+  <meta charset="UTF-8">
+  <title>CampFire</title>
+  <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,400,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/node_modules/font-awesome/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="/node_modules/@yaireo/tagify/dist/tagify.css">
+  <link rel="stylesheet" href="/node_modules/summernote/dist/summernote-bs4.min.css">
+  <script src="/node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/node_modules/jdenticon/dist/jdenticon.min.js"></script>
+  <style>
+    .container {
+      max-width: 100%;
+    }
+
+    .tagify-outside{
+      border: 0;
+      padding: 0;
+      margin: 0;
+    }
+
+    #camp-logo {
+      height: 200px;
+      width: 100%;
+      overflow: hidden;
+      padding: 0;
+      margin: 0;
+    }
+
+    #camp-logo img {
+      height: auto;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    }
+
+    body,
+    input,
+    button,
+    select,
+    optgroup,
+    textarea,
+    .tooltip,
+    .popover {
+      font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    }
+
+    table th {
+      font-weight: lighter;
+    }
+
+    mark {
+      padding: 0;
+      background: transparent;
+      background: linear-gradient(to right, #f0ad4e 50%, transparent 50%);
+      background-position: right bottom;
+      background-size: 200% 100%;
+      transition: all .5s ease;
+      color: #fff;
+    }
+
+    mark.animate {
+      background-position: left bottom;
+      color: #000;
+    }
+
+    .jumbotron {
+      padding-top: 3rem;
+      padding-bottom: 3rem;
+      margin-bottom: 0;
+      background-color: #fff;
+    }
+    @media (min-width: 768px) {
+      .jumbotron {
+        padding-top: 6rem;
+        padding-bottom: 6rem;
+      }
+    }
+
+    .jumbotron p:last-child {
+      margin-bottom: 0;
+    }
+
+    .jumbotron h1 {
+      font-weight: 300;
+    }
+
+    .jumbotron .container {
+      max-width: 40rem;
+    }
+  </style>
+</head>
+
+<nav th:fragment="main-nav" class="navbar navbar-expand-sm navbar-dark bg-dark">
+  <a class="navbar-brand" href="/" th:href="@{/}">
+    <img src="/images/logo.jpg" width="30" height="30">
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <form th:action="@{/search/code}" class="form-inline" method="get">
+          <input class="form-control mr-sm-2" name="keyword" type="search" placeholder="리뷰할 코드 찾기" aria-label="Search" />
+        </form>
+      </li>
+    </ul>
+
+    <ul class="navbar-nav justify-content-end">
+      <li class="nav-item" sec:authorize="!isAuthenticated()">
+        <a class="nav-link" th:href="@{/login}">로그인</a>
+      </li>
+      <li class="nav-item" sec:authorize="!isAuthenticated()">
+        <a class="nav-link" th:href="@{/sign-up}">가입</a>
+      </li>
+      <li class="nav-item" sec:authorize="isAuthenticated()">
+        <a class="nav-link" th:href="@{/notifications}">
+          <i th:if="${!hasNotification}" class="fa fa-bell-o" aria-hidden="true"></i>
+          <span class="text-info" th:if="${hasNotification}"><i class="fa fa-bell" aria-hidden="true"></i></span>
+        </a>
+      </li>
+      <li class="nav-item" sec:authorize="isAuthenticated()">
+        <a class="nav-link btn btn-outline-primary" th:href="@{/new-review}">
+          <i class="fa fa-plus" aria-hidden="true"></i> 리뷰받을 코드 작성
+        </a>
+      </li>
+      <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+           aria-haspopup="true" aria-expanded="false">
+          <svg th:if="${#strings.isEmpty(account?.profileImage)}" th:data-jdenticon-value="${#authentication.name}"
+               width="24" height="24" class="rounded border bg-light"></svg>
+          <img th:if="${!#strings.isEmpty(account?.profileImage)}" th:src="${account.profileImage}"
+               width="24" height="24" class="rounded border"/>
+        </a>
+        <div class="dropdown-menu dropdown-menu-sm-right" aria-labelledby="userDropdown">
+          <h6 class="dropdown-header">
+            <span sec:authentication="name">Username</span>
+          </h6>
+          <a class="dropdown-item" th:href="@{'/profile/' + ${#authentication.name}}">프로필</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#" th:href="@{'/settings/profile'}">설정</a>
+          <form class="form-inline my-2 my-lg-0" action="#" th:action="@{/logout}" method="post">
+            <button class="dropdown-item" type="submit">로그아웃</button>
+          </form>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<footer th:fragment="footer">
+  <div class="row justify-content-center">
+    <img class="mb-2" src="/images/logo_footer.jpg" alt="logo-footer" width="100">
+    <small class="d-block mb-3 text-muted">&copy; 2023</small>
+  </div>
+</footer>
+
+<script type="application/javascript" th:fragment="form-validation">
+  (function () {
+    'use strict';
+
+    window.addEventListener('load', function () {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+
+      // Loop over them and prevent submission
+      Array.prototype.filter.call(forms, function (form) {
+        form.addEventListener('submit', function (event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated')
+        }, false)
+      })
+    }, false)
+  }())
+</script>
+
+<script type="application/javascript" th:inline="javascript" th:fragment="ajax-csrf-header">
+  $(function() {
+    var csrfToken = /*[[${_csrf.token}]]*/ null;
+    var csrfHeader = /*[[${_csrf.headerName}]]*/ null;
+    $(document).ajaxSend(function (e, xhr, options) {
+      xhr.setRequestHeader(csrfHeader, csrfToken);
+    });
+  });
+</script>
+
+<div th:fragment="review-info">
+  <div class="row pt-4 text-left justify-content-center bg-light">
+    <div class="col-6">
+      <a href="#" class="text-decoration-none" th:href="@{'/review/' + ${review.title}}">
+        <span class="h2" th:text="${review.title}">리뷰받을 코드의 제목</span>
+      </a>
+    </div>
+    <div class="col-4 text-right justify-content-end">
+<!--      <span th:if="${!review.published}"-->
+<!--            class="d-inline-block" tabindex="0" data-toggle="tooltip" data-placement="bottom"-->
+<!--            title="해당 리뷰는 공개 준비 중입니다.">-->
+<!--          <button class="btn btn-primary btn-sm" style="pointer-events: none;" type="button" disabled>DRAFT</button>-->
+<!--      </span>-->
+<!--      <span th:if="${review.closed}"-->
+<!--            class="d-inline-block" tabindex="0" data-toggle="tooltip" data-placement="bottom" title="좋은 리뷰를 받았습니다!">-->
+<!--                    <button class="btn btn-primary btn-sm" style="pointer-events: none;" type="button" disabled>CLOSED</button>-->
+<!--                </span>-->
+      <span sec:authorize="isAuthenticated()"
+            th:if="${review.isAuthor(#authentication.principal)}" class="btn-group" role="group">
+                    <a class="btn btn-outline-warning" th:href="@{'/review/' + ${review.id} + '/modify'}">
+                        <i class="fa fa-cog">수정</i>
+                    </a>
+      </span>
+      <span sec:authorize="isAuthenticated()"
+            th:if="${review.isAuthor(#authentication.principal)}" class="btn-group" role="group">
+                    <a class="btn btn-outline-warning" th:href="@{'/review/' + ${review.id} + '/leave'}">
+                        리뷰 삭제
+                    </a>
+      </span>
+    </div>
+  </div>
+  <div class="row justify-content-center bg-light">
+    <div class="col-10">
+      <p>
+          <span th:each="tag: ${review.tags}"
+                class="font-weight-light text-monospace badge badge-pill badge-info mr-3">
+              <a th:href="@{'/search/tag/' + ${tag.name}}" class="text-decoration-none text-white">
+                  <i class="fa fa-tag"></i> <span th:text="${tag.name}">Tag</span>
+              </a>
+          </span>
+      </p>
+    </div>
+  </div>
+</div>
+
+<div th:fragment="editor-script">
+  <script src="/node_modules/summernote/dist/summernote-bs4.js"></script>
+  <script src="/node_modules/codemirror/lib/codemirror.js"></script>
+  <script src="/node_modules/codemirror/mode/xml/xml.js"></script>
+  <script type="application/javascript">
+    $(function () {
+      $('.editor').summernote({
+        fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Noto Sans KR', 'Merriweather'],
+        placeholder: '코드에 대한 설명을 자세히 적어주세요.',
+        tabsize: 2,
+        height: 300,
+        codemirror: { // codemirror options
+          CodeMirrorConstructor: CodeMirror,
+          theme: 'monokai'
+        }
+      });
+    });
+  </script>
+</div>
+
+<div th:fragment="message" th:if="${message}" class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+  <span th:text="${message}">완료</span>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<script th:fragment="tooltip" type="application/javascript">
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+</script>
+
+
+<script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
+<script type="application/javascript" th:inline="javascript">
+  $(function() {
+    var reviewTitle = "[(${review.title})]";
+    function tagRequest(url, tagTitle) {
+      $.ajax({
+        dataType: "json",
+        autocomplete: {
+          enabled: true,
+          rightKey: true,
+        },
+        contentType: "application/json; charset=utf-8",
+        method: "POST",
+        url: "/review/" + reviewTitle + "/settings/tags" + url,
+        data: JSON.stringify({'tagTitle': tagTitle})
+      }).done(function (data, status) {
+        console.log("${data} and status is ${status}");
+      });
+    }
+
+    function onAdd(e) {
+      tagRequest("/add", e.detail.data.value);
+    }
+
+    function onRemove(e) {
+      tagRequest("/remove", e.detail.data.value);
+    }
+
+    var tagInput = document.querySelector("#tags");
+    var tagify = new Tagify(tagInput, {
+      pattern: /^.{0,20}$/,
+      whitelist: JSON.parse(document.querySelector("#whitelist").textContent),
+      dropdown : {
+        enabled: 1, // suggest tags after a single character input
+      } // map tags
+    });
+    tagify.on("add", onAdd);
+    tagify.on("remove", onRemove);
+    // add a class to Tagify's input element
+    tagify.DOM.input.classList.add('form-control');
+    // re-place Tagify's input element outside of the  element (tagify.DOM.scope), just before it
+    tagify.DOM.scope.parentNode.insertBefore(tagify.DOM.input, tagify.DOM.scope);
+  });
+</script>
+
+<div th:fragment="update-tags (baseUrl)">
+  <script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
+  <script type="application/javascript" th:inline="javascript">
+    $(function() {
+      function tagRequest(url, tagTitle) {
+        $.ajax({
+          dataType: "json",
+          autocomplete: {
+            enabled: true,
+            rightKey: true,
+          },
+          contentType: "application/json; charset=utf-8",
+          method: "POST",
+          url: "[(${baseUrl})]" + url,
+          data: JSON.stringify({'tagTitle': tagTitle})
+        }).done(function (data, status) {
+          console.log("${data} and status is ${status}");
+        });
+      }
+
+      function onAdd(e) {
+        tagRequest("/add", e.detail.data.value);
+      }
+
+      function onRemove(e) {
+        tagRequest("/remove", e.detail.data.value);
+      }
+
+      var tagInput = document.querySelector("#tags");
+      var tagify = new Tagify(tagInput, {
+        pattern: /^.{0,20}$/,
+        whitelist: JSON.parse(document.querySelector("#whitelist").textContent),
+        dropdown : {
+          enabled: 1, // suggest tags after a single character input
+        } // map tags
+      });
+      tagify.on("add", onAdd);
+      tagify.on("remove", onRemove);
+      // add a class to Tagify's input element
+      tagify.DOM.input.classList.add('form-control');
+      // re-place Tagify's input element outside of the  element (tagify.DOM.scope), just before it
+      tagify.DOM.scope.parentNode.insertBefore(tagify.DOM.input, tagify.DOM.scope);
+    });
+  </script>
+</div>
+
+<div th:fragment="date-time">
+  <script src="/node_modules/moment/min/moment-with-locales.min.js"></script>
+  <script type="application/javascript">
+    $(function () {
+      moment.locale('ko');
+      $(".date-time").text(function(index, dateTime) {
+        return moment(dateTime, "YYYY-MM-DD`T`hh:mm").format('LLL');
+      });
+      $(".date").text(function(index, dateTime) {
+        return moment(dateTime, "YYYY-MM-DD`T`hh:mm").format('LL');
+      });
+      $(".weekday").text(function(index, dateTime) {
+        return moment(dateTime, "YYYY-MM-DD`T`hh:mm").format('dddd');
+      });
+      $(".time").text(function(index, dateTime) {
+        return moment(dateTime, "YYYY-MM-DD`T`hh:mm").format('LT');
+      });
+      $(".calendar").text(function(index, dateTime) {
+        return moment(dateTime, "YYYY-MM-DD`T`hh:mm").calendar();
+      });
+      $(".fromNow").text(function(index, dateTime) {
+        return moment(dateTime, "YYYY-MM-DD`T`hh:mm").fromNow();
+      });
+      $(".date-weekday-time").text(function(index, dateTime) {
+        return moment(dateTime, "YYYY-MM-DD`T`hh:mm").format('LLLL');
+      });
+    })
+  </script>
+</div>
+
+<ul th:fragment="notification-list (notifications)" class="list-group list-group-flush">
+  <a href="#" th:href="@{${noti.link}}" th:each="noti: ${notifications}"
+     class="list-group-item list-group-item-action">
+    <div class="d-flex w-100 justify-content-between">
+      <small class="text-muted" th:text="${noti.title}">Noti title</small>
+      <small class="fromNow text-muted" th:text="${noti.createdDateTime}">3 days ago</small>
+    </div>
+    <p th:text="${noti.message}" class="text-left mb-0 mt-1">message</p>
+  </a>
+</ul>
+
+<div th:fragment="review-list">
+  <script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
+  <script type="application/javascript" th:inline="javascript">
+    let lastScroll = 0;
+    let count = 0;
+    console.log("do");
+    $.ajax({
+      autocomplete: {
+        enabled: true,
+        rightKey: true,
+      },
+      contentType: "application/html; charset=utf-8",
+      method: "GET",
+      url: "[(${baseUrl})]" + `/review-page?review-id=${count}`,
+    }).done(function (data, status) {
+      console.log(`${data} and status is ${status}`);
+      $("div.list").append(data);
+      count = count + 10;
+    });
+    $(document).scroll(function(e) {
+      var currentScroll = $(this).scrollTop();
+      var documentHeight = $(document).height();
+      var nowHeight = $(this).scrollTop() + $(window).height();
+
+      if (currentScroll > lastScroll) {
+        if (documentHeight < (nowHeight + documentHeight * 0.1)) {
+          $.ajax({
+            autocomplete: {
+              enabled: true,
+              rightKey: true,
+            },
+            contentType: "application/html; charset=utf-8",
+            method: "GET",
+            url: "[(${baseUrl})]" + `/review-page?review-id=${count}`,
+          }).done(function (data, status) {
+            console.log(`${data} and status is ${status}`);
+            $("div.list").append(data);
+            count = count + 10;
+          });
+        }
+      }
+      lastScroll = currentScroll;
+    });
+  </script>
+</div>
+
+</html>
