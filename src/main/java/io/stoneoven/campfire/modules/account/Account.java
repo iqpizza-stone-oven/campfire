@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -25,21 +24,27 @@ public class Account {
     @Column(nullable = false, updatable = false)
     private RegisterType registerType;
 
-    @Builder.Default
-    @Column(nullable = false)
-    private boolean emailVerify = false;
-
-    @Column(length = 8)
-    private String emailVerifyToken;
-
-    private LocalDateTime emailTokenGeneratedAt;
-
     @Setter
     @Column(length = 40)
     private String name;
 
     @Setter
     private String profileImage;
+
+    // notification when new code with interest tags
+    @Builder.Default
+    @Column(nullable = false)
+    private boolean notificationWhenNewCode = false;
+
+    // notification when code has request 'code-review'
+    @Builder.Default
+    @Column(nullable = false)
+    private boolean notificationWhenRequest = false;
+
+    // notification when use coin or earn coin
+    @Builder.Default
+    @Column(nullable = false)
+    private boolean notificationWhenCoinEvent = false;
 
     @Builder.Default
     @Column(nullable = false)
