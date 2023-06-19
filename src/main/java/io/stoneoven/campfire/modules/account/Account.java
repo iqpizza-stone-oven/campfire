@@ -34,9 +34,11 @@ public class Account {
 
     private LocalDateTime emailTokenGeneratedAt;
 
+    @Setter
     @Column(length = 40)
     private String name;
 
+    @Setter
     private String profileImage;
 
     @Builder.Default
@@ -46,6 +48,22 @@ public class Account {
     @ManyToMany
     @Builder.Default
     private Set<Tag> tags = new HashSet<>();
+
+    public void updateInterestTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public void earnCoin(short coin) {
+        this.coin += coin;
+    }
+
+    public void loseCoin(short coin) {
+        if (this.coin < coin) {
+            throw new IllegalArgumentException();
+        }
+
+        this.coin -= coin;
+    }
 
     @Override
     public boolean equals(Object o) {
