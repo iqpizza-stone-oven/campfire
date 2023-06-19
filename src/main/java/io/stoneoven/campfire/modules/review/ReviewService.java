@@ -27,10 +27,7 @@ public class ReviewService {
         Review review = reviewForm.toEntity();
         review.setWriter(account);
         if (reviewForm.getTags() != null) {
-            List<String> rawTags = Arrays.stream(reviewForm.getTags().split(",")).toList();
-            Set<Tag> tags = rawTags.stream().map(tagService::findOrCreateNew)
-                    .collect(Collectors.toSet());
-            review.setTags(tags);
+            review.setTags(convertToTags(reviewForm.getTags()));
         }
         return reviewRepository.save(review);
     }
@@ -39,5 +36,27 @@ public class ReviewService {
     public Review getReview(String title, Account account) {
         return reviewRepository.findByAccountAndTitle(account, title)
                 .orElseThrow();
+    }
+
+    @Transactional(readOnly = true)
+    public Review findReviewById(long id) {
+        return reviewRepository.findById(id)
+                .orElseThrow();
+    }
+
+    public Review updateReview(Review review, ReviewForm reviewForm) {
+        review.setDescriptions(reviewForm.getTitle(), review.getContent());
+        review.setTags(convertToTags(reviewForm.getTags()));
+        return reviewRepository.save(review);
+    }
+
+    private Set<Tag> convertToTags(String rawTags) {
+        List<String> tags = Arrays.stream(rawTags.split(",")).toList();
+        return tags.stream().map(tagService::findOrCreateNew)
+                .collect(Collectors.toSet());
+    }
+
+    public void deleteReview(Review review) {
+        reviewRepository.delete(review);
     }
 }
