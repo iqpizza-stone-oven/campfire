@@ -37,6 +37,11 @@ public class Review {
     @ToString.Exclude
     private Set<Tag> tags;
 
+    public void setDescriptions(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
     }
@@ -50,7 +55,11 @@ public class Review {
     }
 
     public boolean isAuthor(UserAccount account) {
-        return this.account.equals(account.getAccount());
+        return isAuthor(account.getAccount());
+    }
+
+    public boolean isAuthor(Account account) {
+        return this.account.equals(account);
     }
 
     @Override
