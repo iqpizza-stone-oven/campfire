@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments.html :: head}"></head>
+<body class="bg-light">
+    <div th:replace="~{fragments.html :: main-nav}"></div>
+    <div class="container">
+        <div class="py-5 text-center">
+            <h2>리뷰받을 코드 작성</h2>
+        </div>
+        <div class="row justify-content-center">
+            <form class="needs-validation col-sm-10" th:action="@{/new-review}" th:object="${reviewForm}" method="post" novalidate>
+                <div class="form-group">
+                    <label for="title">코드 제목</label>
+                    <input id="title" type="text" th:field="*{title}" class="form-control" required maxlength="255">
+                    <small id="title-help" class="form-text text-muted">
+                        모든 사용자들에게 보여질 제목입니다.
+                    </small>
+                    <small class="invalid-feedback">코드 제목을 입력하세요.</small>
+                    <small class="form-text text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title Error</small>
+                </div>
+                <div class="form-group">
+                    <label for="content">코드 설명</label>
+                    <textarea id="content" th:field="*{content}" class="editor form-control"></textarea>
+                    <small id="content-help" class="form-text text-muted">
+                        코드에 대한 설명을 자세히 적어주세요.
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label for="tags">태그</label>
+                    <input id="tags" type="text" name="tags" th:field="*{tags}"
+                            class="tagify-outside" aria-describedby="taghelp">
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-block" type="submit" aria-describedby="submitHelp">
+                        리뷰할 코드 게시하기
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div th:replace="~{fragments.html :: footer}"></div>
+    </div>
+    <script th:replace="~{fragments.html :: tooltip}"></script>
+    <script th:replace="~{fragments.html :: form-validation}"></script>
+    <script th:replace="~{fragments.html :: editor-script}"></script>
+</body>
+</html>
