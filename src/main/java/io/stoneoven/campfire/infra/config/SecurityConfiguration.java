@@ -23,6 +23,7 @@ public class SecurityConfiguration {
                 request.requestMatchers(
                         "/", "/login", "/sign-up",
                         "/check-email-token",
+                        "/review-page",
                         "/search/review"
                 ).permitAll()
                 .anyRequest().authenticated());
