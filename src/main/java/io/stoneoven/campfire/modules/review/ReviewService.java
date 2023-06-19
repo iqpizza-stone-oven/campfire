@@ -28,7 +28,7 @@ public class ReviewService {
         Review review = reviewForm.toEntity();
         review.setWriter(account);
         if (reviewForm.getTags() != null) {
-            review.setTags(convertToTags(reviewForm.getTags()));
+            review.setTags(tagService.convertToTags(reviewForm.getTags()));
         }
         return reviewRepository.save(review);
     }
@@ -47,14 +47,8 @@ public class ReviewService {
 
     public Review updateReview(Review review, ReviewModifyForm reviewForm) {
         review.setDescriptions(reviewForm.getTitle(), review.getContent());
-        review.setTags(convertToTags(reviewForm.getTags()));
+        review.setTags(tagService.convertToTags(reviewForm.getTags()));
         return reviewRepository.save(review);
-    }
-
-    private Set<Tag> convertToTags(String rawTags) {
-        List<String> tags = Arrays.stream(rawTags.split(",")).toList();
-        return tags.stream().map(tagService::findOrCreateNew)
-                .collect(Collectors.toSet());
     }
 
     public void deleteReview(Review review) {

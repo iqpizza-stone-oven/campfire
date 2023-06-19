@@ -4,6 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class TagService {
@@ -18,5 +23,11 @@ public class TagService {
         }
 
         return tag;
+    }
+
+    public Set<Tag> convertToTags(String rawTags) {
+        List<String> tags = Arrays.stream(rawTags.strip().split(",")).toList();
+        return tags.stream().map(this::findOrCreateNew)
+                .collect(Collectors.toSet());
     }
 }
