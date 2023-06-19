@@ -1,6 +1,6 @@
 package io.stoneoven.campfire.infra.config;
 
-import io.stoneoven.campfire.modules.account.AccountService;
+import io.stoneoven.campfire.modules.account.AccountOAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    private final AccountService accountService;
+    private final AccountOAuthService accountOAuthService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -33,7 +33,7 @@ public class SecurityConfiguration {
                 .defaultSuccessUrl("/")
                 .failureUrl("/login")
                 .userInfoEndpoint()
-                .userService(accountService);
+                .userService(accountOAuthService);
         return
                 http.build();
     }

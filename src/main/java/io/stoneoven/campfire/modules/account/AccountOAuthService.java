@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class AccountService extends DefaultOAuth2UserService {
+public class AccountOAuthService extends DefaultOAuth2UserService {
 
     private final AccountRepository accountRepository;
 
