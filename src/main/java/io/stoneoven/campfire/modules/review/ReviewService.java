@@ -2,6 +2,7 @@ package io.stoneoven.campfire.modules.review;
 
 import io.stoneoven.campfire.modules.account.Account;
 import io.stoneoven.campfire.modules.review.form.ReviewForm;
+import io.stoneoven.campfire.modules.review.form.ReviewModifyForm;
 import io.stoneoven.campfire.modules.tag.Tag;
 import io.stoneoven.campfire.modules.tag.TagService;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +45,7 @@ public class ReviewService {
                 .orElseThrow();
     }
 
-    public Review updateReview(Review review, ReviewForm reviewForm) {
+    public Review updateReview(Review review, ReviewModifyForm reviewForm) {
         review.setDescriptions(reviewForm.getTitle(), review.getContent());
         review.setTags(convertToTags(reviewForm.getTags()));
         return reviewRepository.save(review);

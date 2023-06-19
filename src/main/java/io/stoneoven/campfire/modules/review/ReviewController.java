@@ -3,6 +3,7 @@ package io.stoneoven.campfire.modules.review;
 import io.stoneoven.campfire.modules.account.Account;
 import io.stoneoven.campfire.modules.account.CurrentAccount;
 import io.stoneoven.campfire.modules.review.form.ReviewForm;
+import io.stoneoven.campfire.modules.review.form.ReviewModifyForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,6 +35,7 @@ public class ReviewController {
             return "review/review";
         }
 
+        reviewForm.setTitle(reviewForm.getTitle().trim());
         Review review = reviewService.createNewReview(reviewForm, account);
         return "redirect:/review/" + URLEncoder.encode(review.getTitle(), StandardCharsets.UTF_8);
     }
@@ -58,28 +60,25 @@ public class ReviewController {
         }
 
         model.addAttribute(account);
-        model.addAttribute(review);
+        model.addAttribute("id", id);
+        model.addAttribute(new ReviewModifyForm(review));
         return "review/modify";
     }
 
     @PutMapping("/review/{review-id}/modify")
-    public String modifyReview(@CurrentAccount Account account, ReviewForm reviewForm,
-                               @PathVariable("review-id") long id,
-                               Errors errors, Model model) {
+    public String modifyReview(@CurrentAccount Account account, ReviewModifyForm reviewForm,
+                               @PathVariable("review-id") long id, Errors errors) {
         final Review review = reviewService.findReviewById(id);
         if (errors.hasErrors() || !review.isAuthor(account)) {
-            model.addAttribute(account);
-            model.addAttribute(review);
-            return "redirect:/review/view";
+            return "redirect:/";
         }
 
-        final Review modifiedReview = reviewService.updateReview(review, reviewForm);
-        model.addAttribute(account);
-        model.addAttribute(modifiedReview);
-        return "redirect:/review/view";
+        Review modifiedReview = reviewService.updateReview(review, reviewForm);
+        return "redirect:/review/"
+                + URLEncoder.encode(modifiedReview.getTitle(), StandardCharsets.UTF_8);
     }
 
-    @DeleteMapping("/review/{review-id}")
+    @GetMapping("/review/{review-id}/leave")
     public String deleteReview(@CurrentAccount Account account,
                                @PathVariable("review-id") long id,
                                Model model) {
