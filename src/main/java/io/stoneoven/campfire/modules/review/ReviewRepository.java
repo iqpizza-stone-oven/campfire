@@ -13,6 +13,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     Slice<Review> findAllByIdGreaterThan(Pageable pageable, Long id);
 
-    Optional<Review> findByAccountAndTitle(Account account, String title);
+    Optional<Review> findByTitle(String title);
 
 }

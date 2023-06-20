@@ -3,17 +3,11 @@ package io.stoneoven.campfire.modules.review;
 import io.stoneoven.campfire.modules.account.Account;
 import io.stoneoven.campfire.modules.review.form.ReviewForm;
 import io.stoneoven.campfire.modules.review.form.ReviewModifyForm;
-import io.stoneoven.campfire.modules.tag.Tag;
 import io.stoneoven.campfire.modules.tag.TagService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -34,8 +28,8 @@ public class ReviewService {
     }
 
     @Transactional(readOnly = true)
-    public Review getReview(String title, Account account) {
-        return reviewRepository.findByAccountAndTitle(account, title)
+    public Review getReview(String title) {
+        return reviewRepository.findByTitle(title)
                 .orElseThrow();
     }
 

@@ -2,6 +2,7 @@ package io.stoneoven.campfire.modules.review;
 
 import io.stoneoven.campfire.modules.account.Account;
 import io.stoneoven.campfire.modules.account.CurrentAccount;
+import io.stoneoven.campfire.modules.comment.form.CommentForm;
 import io.stoneoven.campfire.modules.review.form.ReviewForm;
 import io.stoneoven.campfire.modules.review.form.ReviewModifyForm;
 import lombok.RequiredArgsConstructor;
@@ -43,9 +44,11 @@ public class ReviewController {
     @GetMapping("/review/{review-title}")
     public String viewReview(@CurrentAccount Account account, Model model,
                              @PathVariable("review-title") String title) {
-        Review review = reviewService.getReview(URLDecoder.decode(title, StandardCharsets.UTF_8), account);
+        Review review = reviewService.getReview(URLDecoder.decode(title, StandardCharsets.UTF_8));
         model.addAttribute(account);
         model.addAttribute(review);
+        model.addAttribute(new CommentForm());
+        model.addAttribute("comments", review.getComments());
         return "review/view";
     }
 
