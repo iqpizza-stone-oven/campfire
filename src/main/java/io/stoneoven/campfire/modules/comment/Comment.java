@@ -32,8 +32,13 @@ public class Comment {
     @ManyToOne(optional = false)
     private Account account;
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isAccount(Account account) {
         return this.account.equals(account);
+    }
+
+    public void modifyContent(String content) {
+        this.content = content;
     }
 
     @Override

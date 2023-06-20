@@ -28,6 +28,11 @@ public class CommentService {
                 .orElseThrow();
     }
 
+    public void updateComment(Comment comment, String content) {
+        comment.modifyContent(content);
+        commentRepository.save(comment);
+    }
+
     public void removeComment(Comment comment) {
         commentRepository.delete(comment);
     }

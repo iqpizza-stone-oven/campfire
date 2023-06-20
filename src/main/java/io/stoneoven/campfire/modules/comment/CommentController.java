@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -32,7 +33,7 @@ public class CommentController {
     }
 
     @GetMapping("/comment/{comment-id}/modify")
-    public String modifyComment(@CurrentAccount Account account,
+    public String modifyCommentForm(@CurrentAccount Account account,
                                 @PathVariable("comment-id") long commentId, Model model) {
         Comment comment = commentService.getComment(commentId);
         if (!comment.isAccount(account)) {
@@ -49,6 +50,19 @@ public class CommentController {
         model.addAttribute(review);
         model.addAttribute(account);
         return "review/view";
+    }
+
+    @PutMapping("/comment/{comment-id}/modify")
+    public String modifyComment(@CurrentAccount Account account, CommentForm commentForm,
+                                @PathVariable("comment-id") long commentId) {
+        Comment comment = commentService.getComment(commentId);
+        if (!comment.isAccount(account)) {
+            throw new IllegalArgumentException();
+        }
+
+        commentService.updateComment(comment, commentForm.getContent());
+        Review review = comment.getReview();
+        return "redirect:/review/" + URLEncoder.encode(review.getTitle(), StandardCharsets.UTF_8);
     }
 
     @GetMapping("/comment/{comment-id}/delete")
