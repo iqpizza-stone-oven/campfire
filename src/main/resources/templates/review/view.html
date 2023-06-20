@@ -15,22 +15,7 @@
                     <label for="comment"></label>
                     <textarea id="comment" class="form-control" rows="5" placeholder="write here to review"></textarea>
                 </form>
-                <div class="d-flex mb-4">
-                    <div>
-                        <img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="profile">
-                    </div>
-                    <div class="ms-3">
-                        <div class="fw-bold">Account</div>
-                        Random Comment for Review
-                    </div>
-                </div>
-                <div class="d-flex mb-4">
-                    <img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="profile">
-                    <div class="ms-3">
-                        <div class="fw-bold">Account</div>
-                        Random Comment for Review
-                    </div>
-                </div>
+                <div th:replace="~{fragments.html :: comment-info}"></div>
             </div>
         </div>
     </section>
