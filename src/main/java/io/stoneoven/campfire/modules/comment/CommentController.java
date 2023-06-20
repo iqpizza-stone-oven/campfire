@@ -42,6 +42,7 @@ public class CommentController {
         Review review = comment.getReview();
         CommentForm commentForm = new CommentForm();
         commentForm.setId(commentId);
+        commentForm.setContent(comment.getContent());
         model.addAttribute(commentForm);
         model.addAttribute(comment);
         model.addAttribute("comments", review.getComments());
