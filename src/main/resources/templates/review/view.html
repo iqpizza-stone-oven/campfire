@@ -11,9 +11,16 @@
     <section class="px-5" style="margin-left: 100px; margin-right: 100px">
         <div class="card mb-4 bg-light">
             <div class="card-body">
-                <form class="mb-4">
-                    <label for="comment"></label>
-                    <textarea id="comment" class="form-control" rows="5" placeholder="write here to review"></textarea>
+                <form class="mb-4" th:action="@{/review/{id}/comment(id=${review.id})}" th:object="${commentForm}" method="post">
+                    <div class="form-group">
+                        <label for="comment"></label>
+                        <textarea id="comment" th:field="*{content}" class="form-control" rows="5" placeholder="write here to review"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary btn-block" type="submit" aria-describedby="submitHelp">
+                            코드 리뷰하기
+                        </button>
+                    </div>
                 </form>
                 <div th:replace="~{fragments.html :: comment-info}"></div>
             </div>
