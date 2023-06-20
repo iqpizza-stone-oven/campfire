@@ -14,9 +14,9 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
 
-    public void createNewComment(Account account, Review review,
+    public Comment createNewComment(Account account, Review review,
                                  CommentForm commentForm) {
-        commentRepository.save(Comment.builder()
+        return commentRepository.save(Comment.builder()
                 .account(account)
                 .content(commentForm.getContent())
                 .review(review)
@@ -28,4 +28,7 @@ public class CommentService {
                 .orElseThrow();
     }
 
+    public void removeComment(Comment comment) {
+        commentRepository.delete(comment);
+    }
 }

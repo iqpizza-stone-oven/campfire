@@ -26,7 +26,8 @@ public class CommentController {
     public String addComment(@CurrentAccount Account account,
                              @PathVariable("review-id") long reviewId, CommentForm commentForm) {
         Review review = reviewService.findReviewById(reviewId);
-        commentService.createNewComment(account, review, commentForm);
+        Comment comment = commentService.createNewComment(account, review, commentForm);
+        review.addComment(comment);
         return "redirect:/review/" + URLEncoder.encode(review.getTitle(), StandardCharsets.UTF_8);
     }
 
@@ -58,7 +59,8 @@ public class CommentController {
         }
 
         Review review = comment.getReview();
-
+        review.removeComment(comment);
+        commentService.removeComment(comment);
         return "redirect:/review/" + URLEncoder.encode(review.getTitle(), StandardCharsets.UTF_8);
     }
 }

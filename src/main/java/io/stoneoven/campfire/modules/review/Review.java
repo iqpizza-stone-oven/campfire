@@ -50,6 +50,14 @@ public class Review {
         this.comments = comments;
     }
 
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+    }
+
+    public void removeComment(Comment comment) {
+        this.comments.remove(comment);
+    }
+
     public void setWriter(Account writer) {
         this.account = writer;
     }
