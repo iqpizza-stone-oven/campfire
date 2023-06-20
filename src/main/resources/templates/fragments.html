@@ -408,12 +408,74 @@
   </a>
 </ul>
 
+<div th:fragment="notification-setting">
+  <div class="row mt-3">
+    <form class="col-12" action="#" th:action="@{/setting/notification}" th:ojbect="${settingForm}" th:method="put" novalidate>
+      <input id="profileId" hidden th:value="${settingForm.id}">
+      <div class="form-group">
+        <div class="custom-control custom-switch custom-control-inline">
+          <input type="checkbox" th:value="*{newCode}" class="custom-control-input" id="notiByNewCode">
+          <label class="custom-control-label" for="notiByNewCode">관심 태그로 글이 추가되었을 때 알림 받기</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="custom-control custom-switch custom-control-inline">
+          <input type="checkbox" th:value="*{coin}" class="custom-control-input" id="notiByCoin">
+          <label class="custom-control-label" for="notiByCoin">코인 사용 혹은 획득 시 알림 받기</label>
+        </div>
+      </div>
+    </form>
+  </div>
+  <script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
+  <script type="application/javascript" th:inline="javascript">
+
+    $('#notiByNewCode').click(function() {
+      var accountId = $('#profileId').val();
+      var newCodeChecked = $('#notiByNewCode').is(":checked");
+      var coinChecked = $('#notiByCoin').is(":checked");
+      $.ajax({
+        dataType: "json",
+        autocomplete: {
+          enabled: true,
+          rightKey: true,
+        },
+        contentType: "application/json; charset=utf-8",
+        method: "PUT",
+        url: "[(${baseUrl})]" + "/settings/notification",
+        data: JSON.stringify({'id': accountId, 'newCode': newCodeChecked, 'coinChecked': coinChecked}),
+        headers: {[[${_csrf.headerName}]]: [[${_csrf.token}]]}
+      }).done(function (data, status) {
+        console.log(`${data} and status is ${status}`);
+      });
+    });
+    $('#notiByCoin').click(function() {
+      var accountId = $('#profileId').val();
+      console.log(accountId);
+      var newCodeChecked = $('#notiByNewCode').is(":checked");
+      var coinChecked = $('#notiByCoin').is(":checked");
+      $.ajax({
+        dataType: "json",
+        autocomplete: {
+          enabled: true,
+          rightKey: true,
+        },
+        contentType: "application/json; charset=utf-8",
+        method: "PUT",
+        url: "[(${baseUrl})]" + "/settings/notification",
+        data: JSON.stringify({'id': accountId, 'newCode': newCodeChecked, 'coinChecked': coinChecked}),
+        headers: {[[${_csrf.headerName}]]: [[${_csrf.token}]]}
+      }).done(function (data, status) {
+        console.log(`${data} and status is ${status}`);
+      });
+    });
+  </script>
+</div>
+
 <div th:fragment="review-list">
   <script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
   <script type="application/javascript" th:inline="javascript">
     let lastScroll = 0;
     let count = 0;
-    console.log("do");
     $.ajax({
       autocomplete: {
         enabled: true,
