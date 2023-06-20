@@ -36,11 +36,6 @@ public class Account {
     @Column(nullable = false)
     private boolean notificationWhenNewCode = false;
 
-    // notification when code has request 'code-review'
-    @Builder.Default
-    @Column(nullable = false)
-    private boolean notificationWhenRequest = false;
-
     // notification when use coin or earn coin
     @Builder.Default
     @Column(nullable = false)
@@ -69,6 +64,13 @@ public class Account {
 
         this.coin -= coin;
     }
+
+    public void updateNotificationSettings(boolean notificationWhenNewCode,
+                                           boolean notificationWhenCoinEvent) {
+        this.notificationWhenNewCode = notificationWhenNewCode;
+        this.notificationWhenCoinEvent = notificationWhenCoinEvent;
+    }
+
 
     @Override
     public boolean equals(Object o) {
