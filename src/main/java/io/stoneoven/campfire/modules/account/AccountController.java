@@ -1,6 +1,7 @@
 package io.stoneoven.campfire.modules.account;
 
 import io.stoneoven.campfire.modules.account.form.ProfileForm;
+import io.stoneoven.campfire.modules.account.form.SettingForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,6 +35,8 @@ public class AccountController {
 
         model.addAttribute(fetchedAccount);
         model.addAttribute(new ProfileForm(fetchedAccount));
+        model.addAttribute(new SettingForm(fetchedAccount.getId(),
+                fetchedAccount.isNotificationWhenNewCode(), fetchedAccount.isNotificationWhenCoinEvent()));
         return "account/profile";
     }
 
