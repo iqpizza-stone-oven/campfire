@@ -1,6 +1,7 @@
 package io.stoneoven.campfire.modules.account;
 
 import io.stoneoven.campfire.modules.account.form.ProfileForm;
+import io.stoneoven.campfire.modules.account.form.SettingForm;
 import io.stoneoven.campfire.modules.tag.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,4 +30,8 @@ public class AccountService {
         accountRepository.save(account);
     }
 
+    public void updateSetting(SettingForm settingForm) {
+        Account account = getAccount(settingForm.getId());
+        account.updateNotificationSettings(settingForm.isNewCode(), settingForm.isCoin());
+    }
 }
