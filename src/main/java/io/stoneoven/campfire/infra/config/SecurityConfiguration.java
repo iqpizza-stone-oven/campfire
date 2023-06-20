@@ -24,7 +24,8 @@ public class SecurityConfiguration {
                         "/", "/login", "/sign-up",
                         "/check-email-token",
                         "/review-page",
-                        "/search/review"
+                        "/search/review",
+                        "/settings/notification"
                 ).permitAll()
                 .anyRequest().authenticated());
         //noinspection removal
