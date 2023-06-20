@@ -511,7 +511,7 @@
       <i class="bi bi-arrow-up-circle"></i>
       <small th:text="${comment.sympathy}"></small>
       <i class="bi bi-arrow-down-circle"></i>
-      <a class="btn btn-outline-warning" th:if="${comment.account.name == #authentication.name && (commentId == null || commentId == comment.id)}"
+      <a class="btn btn-outline-warning" th:if="${comment.account.name == #authentication.name && (commentForm.id == null || commentForm.id == comment.id)}"
          th:href="@{'/comment/' + ${comment.id} + '/modify'}">
         <i class="bi bi-pencil-square">수정</i>
       </a>
