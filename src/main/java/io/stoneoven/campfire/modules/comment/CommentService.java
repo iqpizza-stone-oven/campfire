@@ -23,4 +23,9 @@ public class CommentService {
                 .build());
     }
 
+    public Comment getComment(long commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow();
+    }
+
 }

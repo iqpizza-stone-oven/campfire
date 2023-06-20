@@ -32,6 +32,10 @@ public class Comment {
     @ManyToOne(optional = false)
     private Account account;
 
+    public boolean isAccount(Account account) {
+        return this.account.equals(account);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
