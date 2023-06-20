@@ -511,10 +511,12 @@
       <i class="bi bi-arrow-up-circle"></i>
       <small th:text="${comment.sympathy}"></small>
       <i class="bi bi-arrow-down-circle"></i>
-      <a class="btn btn-outline-warning" th:href="@{'/comment/' + ${comment.id} + '/modify'}">
+      <a class="btn btn-outline-warning" th:if="${comment.account.name == #authentication.name && (commentId == null || commentId == comment.id)}"
+         th:href="@{'/comment/' + ${comment.id} + '/modify'}">
         <i class="bi bi-pencil-square">수정</i>
       </a>
-      <a class="btn btn-outline-danger" th:href="@{'/comment/' + ${comment.id} + '/delete'}">
+      <a class="btn btn-outline-danger" th:if="${comment.account.name == #authentication.name}"
+         th:href="@{'/comment/' + ${comment.id} + '/delete'}">
         <i class="bi bi-trash3-fill">삭제</i>
       </a>
     </div>
