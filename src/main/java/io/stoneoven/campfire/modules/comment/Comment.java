@@ -1,11 +1,14 @@
 package io.stoneoven.campfire.modules.comment;
 
 import io.stoneoven.campfire.modules.account.Account;
+import io.stoneoven.campfire.modules.account.UserAccount;
 import io.stoneoven.campfire.modules.review.Review;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -31,6 +34,48 @@ public class Comment {
 
     @ManyToOne(optional = false)
     private Account account;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "comment")
+    private Set<CommentAccount> sympathyUsers = new HashSet<>();
+
+    public void increaseSympathy() {
+        ++this.sympathy;
+    }
+
+    public void decreaseSympathy() {
+        --this.sympathy;
+    }
+
+    public boolean checkAlreadySympathy(CommentAccount account, long id) {
+        return sympathyUsers.contains(account);
+    }
+
+    public boolean checkIncreaseByAccount(Account account, long id) {
+        return sympathyUsers.stream()
+                .anyMatch(ca -> ca.getAccount().equals(account) && this.id == id
+                        && ca.getSympathy() == CommentSympathy.INCREASE);
+    }
+
+    public boolean checkDecreaseByAccount(Account account, long id) {
+        return sympathyUsers.stream()
+                .anyMatch(ca -> ca.getAccount().equals(account) && this.id == id
+                        && ca.getSympathy() == CommentSympathy.DECREASE);
+    }
+
+    public CommentAccount addSympathy(CommentAccount account, long id) {
+        if (checkAlreadySympathy(account, id)) {
+            return account;
+        }
+
+        sympathyUsers.add(account);
+        return null;
+    }
+
+    public void deleteSympathy(CommentAccount account) {
+        sympathyUsers.remove(account);
+    }
+
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isAccount(Account account) {
