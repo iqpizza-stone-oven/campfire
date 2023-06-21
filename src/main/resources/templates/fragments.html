@@ -508,9 +508,19 @@
     <div class="ms-3">
       <div class="fw-bold" th:text="${comment.account.name}"></div>
       <article th:text="${comment.content}"></article>
-      <i class="bi bi-arrow-up-circle"></i>
+      <a th:if="${comment.checkIncreaseByAccount(account, comment.id)}" th:href="@{/comment/{id}/cancel-sympathy(id=${comment.id}, isIncrease=true)}">
+        <i class="bi bi-arrow-up-circle-fill"></i>
+      </a>
+      <a th:unless="${comment.checkIncreaseByAccount(account, comment.id)}" th:href="@{/comment/{id}/sympathy(id=${comment.id}, isIncrease=true)}">
+        <i class="bi bi-arrow-up-circle"></i>
+      </a>
       <small th:text="${comment.sympathy}"></small>
-      <i class="bi bi-arrow-down-circle"></i>
+      <a th:if="${comment.checkDecreaseByAccount(account, comment.id)}" th:href="@{/comment/{id}/cancel-sympathy(id=${comment.id}, isIncrease=false)}">
+        <i class="bi bi-arrow-down-circle-fill"></i>
+      </a>
+      <a th:unless="${comment.checkDecreaseByAccount(account, comment.id)}" th:href="@{/comment/{id}/sympathy(id=${comment.id}, isIncrease=false)}">
+        <i class="bi bi-arrow-down-circle"></i>
+      </a>
       <a class="btn btn-outline-warning" th:if="${comment.account.name == #authentication.name && (commentForm.id == null || commentForm.id == comment.id)}"
          th:href="@{'/comment/' + ${comment.id} + '/modify'}">
         <i class="bi bi-pencil-square">수정</i>
