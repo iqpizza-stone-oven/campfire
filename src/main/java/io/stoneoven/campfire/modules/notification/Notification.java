@@ -39,6 +39,10 @@ public class Notification {
     @Enumerated(EnumType.STRING)
     private NotificationType notificationType;
 
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
