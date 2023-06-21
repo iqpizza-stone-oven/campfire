@@ -75,4 +75,40 @@ public class CommentController {
         commentService.removeComment(comment);
         return "redirect:/review/" + URLEncoder.encode(review.getTitle(), StandardCharsets.UTF_8);
     }
+
+    @GetMapping("/comment/{comment-id}/sympathy")
+    public String sympathyComment(@CurrentAccount Account account,
+                                  @RequestParam boolean isIncrease, @PathVariable("comment-id") long commentId) {
+        Comment comment = commentService.getComment(commentId);
+        CommentSympathy sympathy;
+        if (isIncrease) {
+            comment.increaseSympathy();
+            sympathy = CommentSympathy.INCREASE;
+        }
+        else {
+            comment.decreaseSympathy();
+            sympathy = CommentSympathy.DECREASE;
+        }
+
+        commentService.updateSympathy(account, sympathy, comment);
+        Review review = comment.getReview();
+        return "redirect:/review/" + URLEncoder.encode(review.getTitle(), StandardCharsets.UTF_8);
+    }
+
+    @GetMapping("/comment/{comment-id}/cancel-sympathy")
+    public String removeSympathy(@CurrentAccount Account account,
+                                  @RequestParam boolean isIncrease, @PathVariable("comment-id") long commentId) {
+        Comment comment = commentService.getComment(commentId);
+        // do opposite because it is cancel
+        if (isIncrease) {
+            comment.decreaseSympathy();
+        }
+        else {
+            comment.increaseSympathy();
+        }
+
+        commentService.updateSympathy(account, null, comment);
+        Review review = comment.getReview();
+        return "redirect:/review/" + URLEncoder.encode(review.getTitle(), StandardCharsets.UTF_8);
+    }
 }
