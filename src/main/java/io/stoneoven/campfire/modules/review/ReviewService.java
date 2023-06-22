@@ -37,8 +37,26 @@ public class ReviewService {
         if (reviewForm.getTags() != null) {
             review.setTags(tagService.convertToTags(reviewForm.getTags()));
         }
-        return reviewRepository.save(review);
+
+        Review savedReview = reviewRepository.save(review);
+        sendNotificationToAccount(account, review.getTitle(), review.getTags());
+        return savedReview;
     }
+
+    private void sendNotificationToAccount(Account self, String title, Set<Tag> tags) {
+        Iterable<Account> accounts = accountRepository.findAllByTagsIn(tags);
+        for (Account account : accounts) {
+            if (account.equals(self)) {
+                continue;
+            }
+
+            eventPublisher.publishEvent(new NotificationEvent(
+                    account, "/review/" + URLEncoder.encode(title, StandardCharsets.UTF_8),
+                    NotificationType.REVIEW_REQUEST
+            ));
+        }
+    }
+
 
     @Transactional(readOnly = true)
     public Review getReview(String title) {
