@@ -46,7 +46,7 @@ public class ReviewService {
     private void sendNotificationToAccount(Account self, String title, Set<Tag> tags) {
         Iterable<Account> accounts = accountRepository.findAllByTagsIn(tags);
         for (Account account : accounts) {
-            if (account.equals(self)) {
+            if (account.equals(self) || !account.isNotificationWhenNewCode()) {
                 continue;
             }
 
