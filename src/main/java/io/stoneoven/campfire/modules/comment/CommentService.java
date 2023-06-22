@@ -29,11 +29,14 @@ public class CommentService {
                 .content(commentForm.getContent())
                 .review(review)
                 .build());
-        eventPublisher.publishEvent(new NotificationEvent(
-                review.getAccount(),
-                "/review/" + URLEncoder.encode(review.getTitle(), StandardCharsets.UTF_8),
-                NotificationType.REVIEW_RECEIVE
-        ));
+        if (!comment.isAccount(account)) {
+            eventPublisher.publishEvent(new NotificationEvent(
+                    review.getAccount(),
+                    "/review/" + URLEncoder.encode(review.getTitle(), StandardCharsets.UTF_8),
+                    NotificationType.REVIEW_RECEIVE
+            ));
+        }
+
         return comment;
     }
 
