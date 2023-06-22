@@ -1,7 +1,6 @@
 package io.stoneoven.campfire.modules.comment;
 
 import io.stoneoven.campfire.modules.account.Account;
-import io.stoneoven.campfire.modules.account.UserAccount;
 import io.stoneoven.campfire.modules.review.Review;
 import jakarta.persistence.*;
 import lombok.*;
@@ -47,24 +46,26 @@ public class Comment {
         --this.sympathy;
     }
 
-    public boolean checkAlreadySympathy(CommentAccount account, long id) {
+    public boolean checkAlreadySympathy(CommentAccount account) {
         return sympathyUsers.contains(account);
     }
 
+    @SuppressWarnings("unused")
     public boolean checkIncreaseByAccount(Account account, long id) {
         return sympathyUsers.stream()
                 .anyMatch(ca -> ca.getAccount().equals(account) && this.id == id
                         && ca.getSympathy() == CommentSympathy.INCREASE);
     }
 
+    @SuppressWarnings("unused")
     public boolean checkDecreaseByAccount(Account account, long id) {
         return sympathyUsers.stream()
                 .anyMatch(ca -> ca.getAccount().equals(account) && this.id == id
                         && ca.getSympathy() == CommentSympathy.DECREASE);
     }
 
-    public CommentAccount addSympathy(CommentAccount account, long id) {
-        if (checkAlreadySympathy(account, id)) {
+    public CommentAccount addSympathy(CommentAccount account) {
+        if (checkAlreadySympathy(account)) {
             return account;
         }
 

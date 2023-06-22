@@ -67,7 +67,7 @@ public class CommentService {
                 }
             }
 
-            CommentAccount ca = comment.addSympathy(commentAccount, comment.getId());
+            CommentAccount ca = comment.addSympathy(commentAccount);
             if (ca != null) {
                 ca.updateSympathy(sympathy);
                 repository.save(ca);
