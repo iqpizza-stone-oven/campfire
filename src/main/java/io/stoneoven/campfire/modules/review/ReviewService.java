@@ -1,13 +1,24 @@
 package io.stoneoven.campfire.modules.review;
 
 import io.stoneoven.campfire.modules.account.Account;
+import io.stoneoven.campfire.modules.account.AccountRepository;
+import io.stoneoven.campfire.modules.notification.NotificationType;
+import io.stoneoven.campfire.modules.notification.event.NotificationEvent;
 import io.stoneoven.campfire.modules.review.form.ReviewForm;
 import io.stoneoven.campfire.modules.review.form.ReviewModifyForm;
+import io.stoneoven.campfire.modules.tag.Tag;
 import io.stoneoven.campfire.modules.tag.TagService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -15,8 +26,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ReviewService {
 
+    private final AccountRepository accountRepository;
     private final ReviewRepository reviewRepository;
     private final TagService tagService;
+    private final ApplicationEventPublisher eventPublisher;
 
     public Review createNewReview(ReviewForm reviewForm, Account account) {
         Review review = reviewForm.toEntity();
