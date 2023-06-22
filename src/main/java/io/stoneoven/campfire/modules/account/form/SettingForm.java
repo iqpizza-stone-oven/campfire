@@ -12,6 +12,4 @@ public class SettingForm {
 
     private boolean newCode;
 
-    private boolean coin;
-
 }

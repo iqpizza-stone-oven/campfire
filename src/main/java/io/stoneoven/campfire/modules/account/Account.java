@@ -36,15 +36,6 @@ public class Account {
     @Column(nullable = false)
     private boolean notificationWhenNewCode = false;
 
-    // notification when use coin or earn coin
-    @Builder.Default
-    @Column(nullable = false)
-    private boolean notificationWhenCoinEvent = false;
-
-    @Builder.Default
-    @Column(nullable = false)
-    private short coin = 5;
-
     @ManyToMany
     @Builder.Default
     private Set<Tag> tags = new HashSet<>();
@@ -53,22 +44,8 @@ public class Account {
         this.tags = tags;
     }
 
-    public void earnCoin(short coin) {
-        this.coin += coin;
-    }
-
-    public void loseCoin(short coin) {
-        if (this.coin < coin) {
-            throw new IllegalArgumentException();
-        }
-
-        this.coin -= coin;
-    }
-
-    public void updateNotificationSettings(boolean notificationWhenNewCode,
-                                           boolean notificationWhenCoinEvent) {
+    public void updateNotificationSettings(boolean notificationWhenNewCode) {
         this.notificationWhenNewCode = notificationWhenNewCode;
-        this.notificationWhenCoinEvent = notificationWhenCoinEvent;
     }
 
 

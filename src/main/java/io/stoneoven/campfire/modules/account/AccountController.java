@@ -36,7 +36,7 @@ public class AccountController {
         model.addAttribute(fetchedAccount);
         model.addAttribute(new ProfileForm(fetchedAccount));
         model.addAttribute(new SettingForm(fetchedAccount.getId(),
-                fetchedAccount.isNotificationWhenNewCode(), fetchedAccount.isNotificationWhenCoinEvent()));
+                fetchedAccount.isNotificationWhenNewCode()));
         return "account/profile";
     }
 
