@@ -2,10 +2,16 @@ package io.stoneoven.campfire.modules.comment;
 
 import io.stoneoven.campfire.modules.account.Account;
 import io.stoneoven.campfire.modules.comment.form.CommentForm;
+import io.stoneoven.campfire.modules.notification.NotificationType;
+import io.stoneoven.campfire.modules.notification.event.NotificationEvent;
 import io.stoneoven.campfire.modules.review.Review;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @Service
 @Transactional
@@ -14,14 +20,21 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final CARepository repository;
+    private final ApplicationEventPublisher eventPublisher;
 
     public Comment createNewComment(Account account, Review review,
                                  CommentForm commentForm) {
-        return commentRepository.save(Comment.builder()
+        Comment comment = commentRepository.save(Comment.builder()
                 .account(account)
                 .content(commentForm.getContent())
                 .review(review)
                 .build());
+        eventPublisher.publishEvent(new NotificationEvent(
+                review.getAccount(),
+                "/review/" + URLEncoder.encode(review.getTitle(), StandardCharsets.UTF_8),
+                NotificationType.REVIEW_RECEIVE
+        ));
+        return comment;
     }
 
     public Comment getComment(long commentId) {
