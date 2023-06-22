@@ -111,4 +111,17 @@ public class CommentController {
         Review review = comment.getReview();
         return "redirect:/review/" + URLEncoder.encode(review.getTitle(), StandardCharsets.UTF_8);
     }
+
+    @GetMapping("/comment/{comment-id}/check")
+    public String checkComment(@CurrentAccount Account account,
+                               @PathVariable("comment-id") long commentId) {
+        Comment comment = commentService.getComment(commentId);
+        Review review = comment.getReview();
+        if (!review.isAuthor(account)) {
+            throw new IllegalArgumentException("you're not writer");
+        }
+
+        commentService.commentSelection(comment);
+        return "redirect:/review/" + URLEncoder.encode(review.getTitle(), StandardCharsets.UTF_8);
+    }
 }

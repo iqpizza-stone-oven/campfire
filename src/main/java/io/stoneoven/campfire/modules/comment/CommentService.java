@@ -93,4 +93,13 @@ public class CommentService {
     public void removeComment(Comment comment) {
         commentRepository.delete(comment);
     }
+
+    public void commentSelection(Comment comment) {
+        if (comment.isSelection()) {
+            throw new IllegalArgumentException("already selected!");
+        }
+
+        comment.check();
+        commentRepository.save(comment);
+    }
 }

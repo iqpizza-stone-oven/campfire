@@ -478,7 +478,16 @@
       <img class="rounded-circle" style="width: 50px; height: 50px" th:src="${comment.account.profileImage}" alt="profileImage">
     </div>
     <div class="ms-3">
-      <div class="fw-bold" th:text="${comment.account.name}"></div>
+      <div class="fw-bold">
+        <small th:text="${comment.account.name}"></small>
+        <a th:if="${review.account.name == #authentication.name && !comment.selection}"
+           th:href="@{'/comment/' + ${comment.id} + '/check'}">
+          <i class="bi bi-patch-check"></i>
+        </a>
+        <s th:if="${comment.selection}">
+          <i class="bi bi-patch-check-fill"></i>
+        </s>
+      </div>
       <article th:text="${comment.content}"></article>
       <a th:if="${comment.checkIncreaseByAccount(account, comment.id)}" th:href="@{/comment/{id}/cancel-sympathy(id=${comment.id}, isIncrease=true)}">
         <i class="bi bi-arrow-up-circle-fill"></i>

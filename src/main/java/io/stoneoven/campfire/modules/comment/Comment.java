@@ -87,6 +87,10 @@ public class Comment {
         this.content = content;
     }
 
+    public void check() {
+        this.selection = true;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
