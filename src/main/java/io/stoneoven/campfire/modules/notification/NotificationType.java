@@ -14,5 +14,10 @@ public enum NotificationType {
     /**
      * 리뷰 요청으로 인해 댓글이 달렸을 때 발생되는 알림
      */
-    REVIEW_RECEIVE
+    REVIEW_RECEIVE,
+
+    /**
+     * 본인의 코드리뷰가 채택되었을 때 발생되는 알림
+     */
+    REVIEW_SELECTED
 }

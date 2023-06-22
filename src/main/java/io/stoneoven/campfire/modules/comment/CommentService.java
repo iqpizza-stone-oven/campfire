@@ -100,6 +100,12 @@ public class CommentService {
         }
 
         comment.check();
+        Review review = comment.getReview();
+        eventPublisher.publishEvent(new NotificationEvent(
+                comment.getAccount(),
+                "/review/" + URLEncoder.encode(review.getTitle(), StandardCharsets.UTF_8),
+                NotificationType.REVIEW_SELECTED
+        ));
         commentRepository.save(comment);
     }
 }
