@@ -99,8 +99,9 @@ public class CommentService {
             throw new IllegalArgumentException("already selected!");
         }
 
-        comment.check();
         Review review = comment.getReview();
+        review.selectComment();
+        comment.check();
         eventPublisher.publishEvent(new NotificationEvent(
                 comment.getAccount(),
                 "/review/" + URLEncoder.encode(review.getTitle(), StandardCharsets.UTF_8),
