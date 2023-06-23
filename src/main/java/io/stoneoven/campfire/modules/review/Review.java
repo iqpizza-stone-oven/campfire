@@ -33,6 +33,10 @@ public class Review {
     @ToString.Exclude
     private Set<Comment> comments;
 
+    @Builder.Default
+    @Column(nullable = false)
+    private boolean commentSelected = false;
+
     @ManyToMany
     @ToString.Exclude
     private Set<Tag> tags;
@@ -68,6 +72,10 @@ public class Review {
 
     public boolean isAuthor(Account account) {
         return this.account.equals(account);
+    }
+
+    public void selectComment() {
+        this.commentSelected = true;
     }
 
     @Override
