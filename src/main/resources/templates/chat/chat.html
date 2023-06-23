@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/webjars/sockjs-client/1.1.2/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+    <script>
+        async function join() {
+            const user = await fetch("[(${baseUrl})]/api/join", {
+                method: "POST",
+                mode: "cors",
+                cache: "no-cache",
+                credentials: "same-origin",
+                headers: {
+                    "Content-Type": "application/json",
+                    "[[${_csrf.headerName}]]": "[[${_csrf.token}]]"
+                },
+                body: JSON.stringify({  sender: "tester", content: "" })
+            })
+                .then(res => {console.log('join', res); return 'ok'})
+                .catch(err => console.error('Error occurred while joining channel to api', err));
+            console.log(user)
+            if (user !== null && user !== undefined) {
+                let socket = new SockJS("ws-chat");
+                let stompClient = Stomp.over(socket);
+                stompClient.connect({}, function (frame) {
+                    console.log("connect success", frame);
+                });
+
+                if (stompClient.connected) {
+                    stompClient.subscribe("/topic/*", function (res) {
+                        console.log(res);
+                    });
+                }
+            }
+        }
+
+        join();
+    </script>
+</body>
+</html>
