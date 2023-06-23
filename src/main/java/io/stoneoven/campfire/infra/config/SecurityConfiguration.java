@@ -25,7 +25,10 @@ public class SecurityConfiguration {
                         "/check-email-token",
                         "/review-page",
                         "/search/review",
-                        "/settings/notification"
+                        "/settings/notification",
+                        "/chat/**",
+                        "/ws-chat/**",
+                        "/api/**"
                 ).permitAll()
                 .anyRequest().authenticated());
         //noinspection removal
