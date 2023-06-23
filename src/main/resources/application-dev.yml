@@ -4,6 +4,8 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
+  main:
+    allow-bean-definition-overriding: true
   jpa:
     hibernate:
       ddl-auto: update
