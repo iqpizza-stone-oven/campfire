@@ -45,4 +45,13 @@ public class ChatService {
             ));
         }
     }
+
+    public Chat getChat(long id) {
+        return repository.findById(id)
+                .orElseThrow();
+    }
+
+    public void deleteChat(Chat chat) {
+        repository.delete(chat);
+    }
 }
