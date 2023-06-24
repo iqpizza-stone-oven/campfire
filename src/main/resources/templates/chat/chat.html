@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <script src="/webjars/sockjs-client/1.1.2/sockjs.min.js"></script>
-    <script src="/webjars/stomp-websocket/2.3.3/stomp.min.js"></script>
-</head>
+<head th:replace="~{fragments.html :: head}"></head>
 <body>
+    <div th:replace="~{fragments.html :: main-nav}"></div>
     <script>
+        let messages = [];
+
         async function join() {
-            const user = await fetch("[(${baseUrl})]/api/join", {
+            return await fetch("http://localhost:8080/api/join", {
                 method: "POST",
                 mode: "cors",
                 cache: "no-cache",
@@ -18,27 +16,78 @@
                     "Content-Type": "application/json",
                     "[[${_csrf.headerName}]]": "[[${_csrf.token}]]"
                 },
-                body: JSON.stringify({  sender: "tester", content: "" })
+                body: JSON.stringify({  sender: "[(${account.name})]", content: "", destination: "[(${topic})]" })
             })
                 .then(res => {console.log('join', res); return 'ok'})
                 .catch(err => console.error('Error occurred while joining channel to api', err));
-            console.log(user)
-            if (user !== null && user !== undefined) {
-                let socket = new SockJS("ws-chat");
-                let stompClient = Stomp.over(socket);
-                stompClient.connect({}, function (frame) {
-                    console.log("connect success", frame);
-                });
-
-                if (stompClient.connected) {
-                    stompClient.subscribe("/topic/*", function (res) {
-                        console.log(res);
-                    });
-                }
-            }
         }
 
-        join();
+        let socket = new SockJS("http://localhost:8080/ws-chat/");
+        let stompClient = Stomp.over(socket);
+
+        function connect() {
+            return new Promise(function (resolve, reject) {
+                stompClient.connect({}, function (frame) {
+                    resolve(frame);
+                }, function (error) {
+                    reject(error);
+                });
+            });
+        }
+
+        let user = join();
+        if (user !== null && user !== undefined) {
+            connect()
+                .then(function (frame) {
+                    console.log("Connected!", frame);
+                    stompClient.subscribe("[(${topic})]", function (res) {
+                        let message = JSON.parse(res.body);
+                        console.log(message);
+                        messages.push(message);
+                        console.log("[(${account.name})]")
+                        console.log(message.sender)
+                        console.log("[(${account.name})]" === message.sender)
+                        const clazz = ("[(${account.name})]" === message.sender) ? "Messages-message currentUser" : "Messages-message";
+                        $(".messages-list")
+                            .append(`<li class=${clazz}><span class="avator"></span><div class="Message-content"><div class="username">${message.sender}</div><div class="text">${message.content}</div></div></li>`);
+                    });
+                })
+                .catch(function (err) {
+                    console.error("Mission failed!", err);
+                })
+        }
+    </script>
+    <ul class="messages-list">
+    </ul>
+    <div class="message-input">
+        <label for="msg"></label>
+        <textarea id="msg" class="inputField" placeholder="Type your message here..." style="height: 30px; width: 80%"></textarea>
+        <button id="msg-submit" class="btn btn-primary btn-block" type="submit">
+            전송
+        </button>
+    </div>
+    <!--suppress JSJQueryEfficiency -->
+    <script type="application/javascript" th:inline="javascript">
+        $(function () {
+            $("div").on("click", "#msg-submit", function (e) {
+                let msg = $("#msg").val();
+                $.ajax({
+                    dataType: "json",
+                    autocomplete: {
+                        enabled: true,
+                        rightKey: true,
+                    },
+                    contentType: "application/json; charset=utf-8",
+                    method: "POST",
+                    url: "http://localhost:8080/api/send",
+                    data: JSON.stringify({  sender: "[(${account.name})]", content: `${msg}`, destination: "[(${topic})]" }),
+                    headers: {[[${_csrf.headerName}]]: [[${_csrf.token}]]}
+                }).done(function (data, status) {
+                    console.log(`${data} and status is ${status}`);
+                });
+                $("#msg").val('');
+            });
+        });
     </script>
 </body>
 </html>
