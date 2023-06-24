@@ -2,6 +2,7 @@ package io.stoneoven.campfire.modules.review;
 
 import io.stoneoven.campfire.modules.account.Account;
 import io.stoneoven.campfire.modules.account.AccountRepository;
+import io.stoneoven.campfire.modules.chat.ChatService;
 import io.stoneoven.campfire.modules.notification.NotificationType;
 import io.stoneoven.campfire.modules.notification.event.NotificationEvent;
 import io.stoneoven.campfire.modules.review.form.ReviewForm;
@@ -29,6 +30,7 @@ public class ReviewService {
     private final AccountRepository accountRepository;
     private final ReviewRepository reviewRepository;
     private final TagService tagService;
+    private final ChatService chatService;
     private final ApplicationEventPublisher eventPublisher;
 
     public Review createNewReview(ReviewForm reviewForm, Account account) {
@@ -77,6 +79,8 @@ public class ReviewService {
     }
 
     public void deleteReview(Review review) {
+        review.setForum(null);
+        chatService.deleteChat(review.getForum());
         reviewRepository.delete(review);
     }
 }
