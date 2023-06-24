@@ -26,7 +26,6 @@ public class SecurityConfiguration {
                         "/review-page",
                         "/search/review",
                         "/settings/notification",
-                        "/chat/**",
                         "/ws-chat/**",
                         "/api/**"
                 ).permitAll()
