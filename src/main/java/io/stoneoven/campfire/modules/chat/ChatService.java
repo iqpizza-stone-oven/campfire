@@ -27,6 +27,7 @@ public class ChatService {
     public Chat createForum(Account self, Chat chat) {
         Chat newChat = repository.save(chat);
         Review review = newChat.getReview();
+        review.setForum(newChat);
         enrollFormNotification(self, newChat.getId(), review.getTags());
         return newChat;
     }

@@ -58,6 +58,11 @@ public class Review {
         this.tags = tags;
     }
 
+    public void setForum(Chat forum) {
+        this.forumOpened = (forum != null);
+        this.forum = forum;
+    }
+
     public void setComments(Set<Comment> comments) {
         this.comments = comments;
     }
