@@ -1,5 +1,6 @@
 package io.stoneoven.campfire.modules.chat;
 
+import io.stoneoven.campfire.modules.review.Review;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,5 +18,8 @@ public class Chat {
 
     @Column(nullable = false, updatable = false)
     private String destination;
+
+    @OneToOne(optional = false)
+    private Review review;
 
 }

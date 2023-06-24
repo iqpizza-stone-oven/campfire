@@ -2,6 +2,7 @@ package io.stoneoven.campfire.modules.review;
 
 import io.stoneoven.campfire.modules.account.Account;
 import io.stoneoven.campfire.modules.account.UserAccount;
+import io.stoneoven.campfire.modules.chat.Chat;
 import io.stoneoven.campfire.modules.comment.Comment;
 import io.stoneoven.campfire.modules.tag.Tag;
 import jakarta.persistence.*;
@@ -36,6 +37,13 @@ public class Review {
     @Builder.Default
     @Column(nullable = false)
     private boolean commentSelected = false;
+
+    @Builder.Default
+    @Column(nullable = false)
+    private boolean forumOpened = false;
+
+    @OneToOne(mappedBy = "review")
+    private Chat forum;
 
     @ManyToMany
     @ToString.Exclude
