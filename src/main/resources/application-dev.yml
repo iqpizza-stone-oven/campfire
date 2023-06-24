@@ -35,3 +35,11 @@ spring:
             scope:
               - profile
               - email
+
+midnight:
+  name: recorder
+  destination: "/topic/group"
+  topic: "midnight-chat"
+  group-id: "midnight-chat"
+  kafka-broker: localhost:9092
+  offset-reset: earliest
