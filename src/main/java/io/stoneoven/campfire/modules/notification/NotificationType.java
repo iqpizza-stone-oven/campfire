@@ -19,5 +19,10 @@ public enum NotificationType {
     /**
      * 본인의 코드리뷰가 채택되었을 때 발생되는 알림
      */
-    REVIEW_SELECTED
+    REVIEW_SELECTED,
+
+    /**
+     * 관심있는 태그에 포럼이 열렸을 경우 발생되는 알림
+     */
+    REVIEW_FORUM
 }
