@@ -320,12 +320,12 @@
 <!--            class="d-inline-block" tabindex="0" data-toggle="tooltip" data-placement="bottom" title="좋은 리뷰를 받았습니다!">-->
 <!--                    <button class="btn btn-primary btn-sm" style="pointer-events: none;" type="button" disabled>CLOSED</button>-->
 <!--                </span>-->
-      <span sec:authentication="isAuthenticated()" class="btn-group" role="group" th:if="${!review.commentSelected && !review.forumOpened}">
+      <span sec:authorize="isAuthenticated()" class="btn-group" role="group" th:if="${!review.commentSelected && !review.forumOpened}">
         <a class="btn btn-outline-primary" th:href="@{'/review-chat/' + ${review.id}}">
           <i class="bi bi-chat-dots">토론장 생성</i>
         </a>
       </span>
-      <span sec:authentication="isAuthenticated()" class="btn-group" role="group" th:if="${!review.commentSelected && review.forumOpened}">
+      <span sec:authorize="isAuthenticated()" class="btn-group" role="group" th:if="${!review.commentSelected && review.forumOpened}">
         <a class="btn btn-outline-primary" th:href="@{'/forum/' + ${review.forum.id}}">
           <i class="bi bi-chat-dots">토론장 입장</i>
         </a>
